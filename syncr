@@ -1,0 +1,47 @@
+#!/bin/bash
+#REMOTE_HOST=hostname or ip address
+#REMOTE_USER=user
+#REMOTE_PATH=/home/user/www/
+#PROJECT_PATH=$(pwd)/
+
+# By default only .dotfiles are excluded. For multiple exclusions, uncomment this
+# and choose a filename. Fill with exclusion targets, one per line.
+#export SYNCR_EXCLUDE_FILE='exclude.txt'
+        
+function upload()
+{
+    if [ "$(printenv SYNCR_EXCLUDE_FILE)" != "" ]; then
+        echo "Found exclusion file: $(pwd)/"$SYNCR_EXCLUDE_FILE""
+        rsync -avzhe ssh "$PROJECT_PATH" "$REMOTE_USER"@"$REMOTE_HOST":"$REMOTE_PATH" --exclude-from $SYNCR_EXCLUDE_FILE
+        unset SYNCR_EXCLUDE_FILE
+    else
+        rsync -avzhe ssh "$PROJECT_PATH" "$REMOTE_USER"@"$REMOTE_HOST":"$REMOTE_PATH" --exclude '.*'
+    fi
+}
+
+function delete()
+{
+    if [ "$(printenv SYNCR_EXCLUDE_FILE)" != "" ]; then
+        echo "Found exclusion file: $(pwd)/"$SYNCR_EXCLUDE_FILE""
+        rsync -avzhe ssh "$PROJECT_PATH" "$REMOTE_USER"@"$REMOTE_HOST":"$REMOTE_PATH" --exclude-from $SYNCR_EXCLUDE_FILE --delete
+        unset SYNCR_EXCLUDE_FILE
+    else
+        rsync -avzhe ssh "$PROJECT_PATH" "$REMOTE_USER"@"$REMOTE_HOST":"$REMOTE_PATH" --exclude '.*' --delete
+    fi
+}
+
+function download()
+{
+    rsync -avzhe ssh "$REMOTE_USER"@"$REMOTE_HOST":"$REMOTE_PATH"  "$PROJECT_PATH" --exclude '.*'
+}
+
+
+if [ "$1" == "upload" ]; then
+    upload
+elif [ "$1" == "delete" ]; then
+    delete
+elif [ "$1" == "download" ]; then
+    download
+else
+    echo "Usage: ./syncr upload | download | delete"
+fi
