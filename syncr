@@ -43,5 +43,5 @@ elif [ "$1" == "delete" ]; then
 elif [ "$1" == "download" ]; then
     download
 else
-    echo "Usage: ./syncr upload | download | delete"
+    echo 'Usage: ./syncr [upload|download|delete]'
 fi
