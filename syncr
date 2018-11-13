@@ -11,28 +11,28 @@
 function upload()
 {
     if [ "$(printenv SYNCR_EXCLUDE_FILE)" != "" ]; then
-        echo "Found exclusion file: $(pwd)/"$SYNCR_EXCLUDE_FILE""
-        rsync -avzhe ssh "$PROJECT_PATH" "$REMOTE_USER"@"$REMOTE_HOST":"$REMOTE_PATH" --exclude-from $SYNCR_EXCLUDE_FILE
+        echo "Found exclusion file: $(pwd)/${SYNCR_EXCLUDE_FILE}"
+        rsync -avzhe ssh ${PROJECT_PATH} ${REMOTE_USER}@${REMOTE_HOST}:${REMOTE_PATH} --exclude-from ${SYNCR_EXCLUDE_FILE}
         unset SYNCR_EXCLUDE_FILE
     else
-        rsync -avzhe ssh "$PROJECT_PATH" "$REMOTE_USER"@"$REMOTE_HOST":"$REMOTE_PATH" --exclude '.*'
+        rsync -avzhe ssh ${PROJECT_PATH} ${REMOTE_USER}@${REMOTE_HOST}:${REMOTE_PATH} --exclude '.*'
     fi
 }
 
 function delete()
 {
     if [ "$(printenv SYNCR_EXCLUDE_FILE)" != "" ]; then
-        echo "Found exclusion file: $(pwd)/"$SYNCR_EXCLUDE_FILE""
-        rsync -avzhe ssh "$PROJECT_PATH" "$REMOTE_USER"@"$REMOTE_HOST":"$REMOTE_PATH" --exclude-from $SYNCR_EXCLUDE_FILE --delete
+        echo "Found exclusion file: $(pwd)/${SYNCR_EXCLUDE_FILE}"
+        rsync -avzhe ssh ${PROJECT_PATH} ${REMOTE_USER}@${REMOTE_HOST}:${REMOTE_PATH} --exclude-from ${SYNCR_EXCLUDE_FILE} --delete
         unset SYNCR_EXCLUDE_FILE
     else
-        rsync -avzhe ssh "$PROJECT_PATH" "$REMOTE_USER"@"$REMOTE_HOST":"$REMOTE_PATH" --exclude '.*' --delete
+        rsync -avzhe ssh ${PROJECT_PATH} ${REMOTE_USER}@${REMOTE_HOST}:${REMOTE_PATH} --exclude '.*' --delete
     fi
 }
 
 function download()
 {
-    rsync -avzhe ssh "$REMOTE_USER"@"$REMOTE_HOST":"$REMOTE_PATH"  "$PROJECT_PATH" --exclude '.*'
+    rsync -avzhe ssh ${REMOTE_USER}@${REMOTE_HOST}:${REMOTE_PATH}  ${PROJECT_PATH} --exclude '.*'
 }
 
 
